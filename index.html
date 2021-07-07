@@ -17,19 +17,31 @@
     content: '• ';
     width: 3em;
   }
-
-  #layers {
-    border: 1px solid #808080;
-    border-radius: 4px;
-    padding: 16px;
+  .grid {
+    display: flex;
+    margin: -5px;
   }
+  .grid > * {
+    margin: 5px;
+  }
+
+  sp-checkbox {
+    width: fit-content;
+  }
+
 </style>
 <body>
   <div></div>
-  <sp-heading>Scale Layers Uniformly</sp-heading>
-  <sp-textfield id="scaleInput" type="number" min="1" value="100">
-    <sp-label slot="label">Scale (%)</sp-label>
-  </sp-textfield>
+  <sp-heading>Scale Layers</sp-heading>
+  <div class="grid">
+    <sp-textfield id="scaleInputX" type="number" value="100">
+      <sp-label slot="label">Scale X (%)</sp-label>
+    </sp-textfield>
+    <sp-textfield id="scaleInputY" type="number" value="100">
+      <sp-label slot="label">Scale Y (%)</sp-label>
+    </sp-textfield>
+  </div>
+  <sp-checkbox checked id="lockRatioCb">Lock ratio</sp-checkbox>
   <footer>
     <sp-button id="btnPopulate">Scale Layers</sp-button>
   </footer>
