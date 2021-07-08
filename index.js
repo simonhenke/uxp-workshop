@@ -1,3 +1,12 @@
+document.getElementById("btnPopulate").addEventListener("click", scaleLayers);
+
+const scaleInput = document.getElementById("scaleInput");
+
+scaleInput.value = window.localStorage.getItem("scale") || scaleInput.value;
+scaleInput.addEventListener("change", () =>
+  window.localStorage.setItem("scale", scaleInput.value)
+);
+
 function scaleLayers() {
   const app = window.require("photoshop").app;
   const activeLayers = app.activeDocument.activeLayers;
@@ -36,25 +45,3 @@ function selectLayers(layers, select) {
     layer.selected = select;
   });
 }
-
-document.getElementById("btnPopulate").addEventListener("click", scaleLayers);
-
-const scaleInput = document.getElementById("scaleInput");
-
-scaleInput.value = window.localStorage.getItem("scale") || scale.value;
-scaleInput.addEventListener("change", () =>
-  window.localStorage.setItem("scale", scaleInput.value)
-);
-
-
-/*
-
-Tasks:
-- Split up scale into X and Y, add a "locked" toggle 
-(when active, update values of both inputs simultaneously)
-
-- Instead of setting scale via input, listen to scale event and repeat it for all other layers
-
-- BatchPlay: Convert to Smart Object before scale
-
-*/
