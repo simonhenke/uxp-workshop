@@ -6,22 +6,34 @@
 <style>
   body {
     color: white;
-    padding: 0 16px;
+    padding: 16px;
     display: flex;
     flex-direction: column;
   }
-  sp-textfield {
-    width: 100%;
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+  }
+  sp-heading {
+    margin: 0;
+  }
+  li:before {
+    content: '• ';
+    width: 3em;
   }
 </style>
 <body>
-  <div></div>
-  <sp-heading>Scale Layers</sp-heading>
-  <sp-textfield id="scaleInput" type="number" min="1" value="100">
-    <sp-label slot="label">Scale (%)</sp-label>
-  </sp-textfield>
+  <header>
+    <sp-heading>Sync Layers</sp-heading>
+    <sp-button id="btnSetLayers">Set</sp-button>
+  </header>
+  <sp-body id="layers">
+    No layers
+  </sp-body>
   <footer>
-    <sp-button id="btnPopulate">Scale Layers</sp-button>
+    
   </footer>
 </body>
 </html>

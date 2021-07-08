@@ -1,43 +1,52 @@
-document.getElementById("btnPopulate").addEventListener("click", scaleLayers);
+const app = require("photoshop").app;
+const action = require("photoshop").action;
+document.getElementById("btnSetLayers").addEventListener("click", setSyncLayers);
+action.addNotificationListener([{event: 'transform'}], onTransformEvent);
+let syncLayers = []
+loadSyncLayers()
 
-const scaleInput = document.getElementById("scaleInput");
-
-scaleInput.value = window.localStorage.getItem("scale") || scaleInput.value;
-scaleInput.addEventListener("change", () =>
-  window.localStorage.setItem("scale", scaleInput.value)
-);
-
-function scaleLayers() {
-  const app = window.require("photoshop").app;
-  const activeLayers = app.activeDocument.activeLayers;
-
-  const allLayers = app.activeDocument.layers;
-
-  if (activeLayers.length < 2) {
-    app.showAlert("Please select at least two layers");
-    return;
+async function loadSyncLayers() {
+  const str = await localStorage.getItem("syncLayers")
+  if(str) {
+    syncLayers = JSON.parse(str)
+    updateView()
   }
+}
 
-  const scale = Number(document.getElementById("scaleInput").value);
-  if (scale !== 100) {
-    // allLayers.forEach(layer => {
-    //   layer.selected = false
-    // });
-    selectLayers(allLayers, false);
+function onTransformEvent(eventName, descriptor) {
+  const doc = app.activeDocument
+  const activeLayers = doc.activeLayers
+  const currentIds = doc.activeLayers.map(l => l._id)  
+  const syncIds = syncLayers.map(l => l._id)
+  const otherLayers = doc.layers.filter(layer => syncIds.includes(layer._id) && !currentIds.includes(layer._id))
+  selectLayers(doc.layers, false);
+  otherLayers.forEach(layer => {
+    const transformDescriptor = {
+      _obj: 'transform',
+      ...descriptor,
+      _target: {_ref: 'layer', _id: layer._id}
+    }
+    layer.selected = true
+    action.batchPlay([transformDescriptor], {synchronousExecution: true})
+    layer.selected = false
+  })
+  selectLayers(activeLayers, true)
+}
 
-    activeLayers.forEach((layer) => {
-      layer.selected = true;
-      layer.scale(scale, scale);
-      layer.selected = false;
-    });
+function setSyncLayers() {
+  syncLayers = app.activeDocument.activeLayers.map(layer => ({
+    _id: layer._id,
+    name: layer.name
+  }))
+  updateView()
+  localStorage.setItem("syncLayers", JSON.stringify(syncLayers))
+}
 
-    // activeLayers.forEach((layer) => {
-    //   layer.selected = true;
-    // });
-    selectLayers(activeLayers, true);
-  } else {
-    app.showAlert("Please select any scale other than 100%");
-  }
+function updateView() {
+  document.getElementById("layers").innerHTML = syncLayers.length ? `
+  <ul>${
+    syncLayers.map(({name}) => `<li>${name}</li>`).join("")
+  }</ul>`: 'No layers';
 }
 
 function selectLayers(layers, select) {
