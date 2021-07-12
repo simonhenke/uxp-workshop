@@ -74,8 +74,8 @@ function scaleLayers(x, y) {
   const activeLayers = app.activeDocument.activeLayers;
   const allLayers = app.activeDocument.layers;
 
-  if (activeLayers.length < 2) {
-    app.showAlert("Please select at least two layers");
+  if (!activeLayers.length) {
+    app.showAlert("Please select a layers");
     return;
   }
 
