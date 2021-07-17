@@ -1,3 +1,6 @@
+const photoshop = window.require("photoshop")
+const app = photoshop.app
+
 document
   .getElementById("btnScale")
   .addEventListener("click", scaleLayers);
@@ -9,7 +12,6 @@ sizeInput.addEventListener("change", () => {
 sizeInput.value = localStorage.getItem("size") || sizeInput.value;
 
 function scaleLayers() {
-  const app = window.require("photoshop").app;
   const activeLayers = app.activeDocument.activeLayers;
   if(!activeLayers.length) {
     app.showAlert("Please select at least one layer");
@@ -21,10 +23,22 @@ function scaleLayers() {
     app.showAlert("Please select a different size than 100%");
     return
   }
+
+  const toSmartObject = {
+    _obj: "newPlacedLayer"
+  };
+
   activeLayers.forEach(layer => layer.selected = false);
 
-  activeLayers.forEach(layer => {
+  activeLayers.forEach((layer, idx) => {
     layer.selected = true;
+
+    if(layer.kind !== 5) {
+      photoshop.action.batchPlay([toSmartObject], {synchronousExecution: true});
+    }
+    layer = app.activeDocument.activeLayers[0];
+    activeLayers[idx] = layer;
+    
     layer.scale(size,size);
     layer.selected = false;
   });
