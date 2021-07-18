@@ -1,0 +1,7 @@
+{
+  "name": "uxp-workshop-scale-multiple-layers",
+  "version": "1.0.0",
+  "description": "Demo-Project to get started with UXP plugin development",
+  "author": "Simon Henke",
+  "license": "Apache-2.0"
+}
