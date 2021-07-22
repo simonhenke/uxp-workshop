@@ -1,6 +1,6 @@
 {
   "id": "uxp-workshop",
-  "name": "UXP workshop",
+  "name": "UXP workshop (Task 2)",
   "version": "1.0.0",
   "main": "index.html",
   "host": [
@@ -32,7 +32,23 @@
       },
       "label": {
         "default": "Starter Panel"
-      }
+      },
+      "icons": [
+        {
+          "width": 23,
+          "height": 23,
+          "path": "icons/light.png",
+          "scale": [1, 2],
+          "theme": ["darkest", "dark", "medium"]
+        },
+        {
+          "width": 23,
+          "height": 23,
+          "path": "icons/dark.png",
+          "scale": [1, 2],
+          "theme": ["lightest", "light"]
+        }
+      ]
     }
   ],
   "icons": [
