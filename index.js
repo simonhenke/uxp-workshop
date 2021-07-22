@@ -3,6 +3,7 @@ const action = require("photoshop").action;
 document.getElementById("btnSetLayers").addEventListener("click", setSyncLayers);
 action.addNotificationListener([{event: 'transform'}], onTransformEvent);
 let syncLayers = []
+let cooldown = false
 loadSyncLayers()
 
 /* Load the layers to synchronize from localStorage */
@@ -17,9 +18,10 @@ async function loadSyncLayers() {
 /* Handler getting called on every transform event.
 /* Repeat the transformation for all sync-layers except the one already transformed. */
 function onTransformEvent(eventName, descriptor) {
-  if(!descriptor._isCommand){
+  if(cooldown){
     return
   }
+  cooldown = true
   const doc = app.activeDocument
   const activeLayers = doc.activeLayers
   const currentIds = doc.activeLayers.map(l => l._id)  
@@ -38,6 +40,7 @@ function onTransformEvent(eventName, descriptor) {
     layer.selected = false
   })
   selectLayers(activeLayers, true)
+  setTimeout(() => cooldown = false, 200);
 }
 
 /* Set the sync-layers to the currently selected ones (and updates the view) */
